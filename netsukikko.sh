@@ -116,12 +116,12 @@ if echo "$choose" | grep -q ".srt$\|.ass$"; then
     name=$(echo "$choose" | sed 's/\.\*/0/g')
     echo "$name"
     ext=${choose##*.}
-    curl -L "$link" -o "$1"."$ext"
+    curl -sL "$link" -o "$1"."$ext"
 elif echo "$choose" | grep -q ".zip$\|.rar$"; then
     link=$(echo "$ws" | grep "$choose"  | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's/^/https:\/\/kitsunekko.net\//' | head -n1)
     name=$(echo "$choose" | sed 's/\.\*/0/g')
     echo "$name"
-    curl -LO "$link"
+    curl -sLO "$link"
     echo "Archive downloaded"
 fi
 
