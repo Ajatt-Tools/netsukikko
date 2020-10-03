@@ -1,5 +1,3 @@
-
-
 #!/bin/bash
 regexsh() {
     # this nice regex shell converter created by Luis C - https://github.com/luiscassih/RegeXNumRangeGenerator
@@ -115,13 +113,16 @@ ws=$(curl -s "$ws")
 choose=$(echo "$ws" |  grep "<strong>" | sed 's/^.*<strong>//;s/<\/strong>.*$//' | sed -e 's/\<00*\([1-9]\)/.*\1/g' | grep -E "$grepisode|$epigrep" | awk -v 'expr=srt:ass:zip:rar' 'BEGIN { n=split(expr, e, /:/);for(i=i; i<=n; ++i) m[i]="" }{ for(i=1; i<=n; ++i) if ($0 ~ e[i]) {m[i]=m[i] $0 ORS; next } }END { for (i=1; i<=n; ++i) printf m[i] }' | head -n1)
 if echo "$choose" | grep -q ".srt$\|.ass$"; then
     link=$(echo "$ws" | grep "$choose"  | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's/^/https:\/\/kitsunekko.net\//' | head -n1)
-    #name=$(echo "$choose" | sed 's/\.\*/0/g')
-    #echo "$name"
-    echo "$link"
+    name=$(echo "$choose" | sed 's/\.\*/0/g')
+    echo "$name"
+    ext=${choose##*.}
+    curl -L "$link" -o "$1"."$ext"
 elif echo "$choose" | grep -q ".zip$\|.rar$"; then
     link=$(echo "$ws" | grep "$choose"  | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's/^/https:\/\/kitsunekko.net\//' | head -n1)
-    #name=$(echo "$choose" | sed 's/\.\*/0/g')
-    #echo "$name"
-    echo "$link"
+    name=$(echo "$choose" | sed 's/\.\*/0/g')
+    echo "$name"
+    curl -LO "$link"
+    echo "Archive downloaded"
 fi
+
 
