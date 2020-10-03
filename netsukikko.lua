@@ -1,5 +1,6 @@
-require 'os'
-netsu = "/home/asakura/.local/bin/shit/netsukikko.sh"
+local utils = require('mp.utils')
+netsu = utils.join_path(os.getenv("HOME"), ".local/bin/shit/netsukikko.sh")
+
 function remote_subtitle()
      current_file =  mp.get_property("path");
      os.execute(" bash "..netsu.." \""..current_file.."\" ");
