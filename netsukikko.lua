@@ -3,7 +3,7 @@ netsu = utils.join_path(os.getenv("HOME"), ".local/bin/shit/netsukikko.sh")
 
 function remote_subtitle()
      current_file =  mp.get_property("path");
-     os.execute(" bash "..netsu.." \""..current_file.."\" ");
+     os.execute(" bash "..netsu.." \""..current_file.."\" \"-mpv\" ");
      mp.commandv("rescan_external_files", "reselect")
 end;
 mp.add_key_binding("b", "auto_load_subs", remote_subtitle)
