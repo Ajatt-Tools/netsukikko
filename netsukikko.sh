@@ -98,8 +98,14 @@ regexsh() {
     echo "($parsedRegex)"
 }
 
+if [[ "$2" == "-mpv" ]] ; then
+	mpv="1"
+else
+	mpv="0"
+fi
+
 nosquare=$(echo "$1" | sed 's/_/ /g;s/\(.*\)- .*/\1/;s/[0-9]//g;s/\[[^]]*\]//g;s/[0-9]//g;s/([^)]*)//g;s/\.[^.]*$//;s/^ *//g;s/ *$//' | sort -nf | uniq -ci | sort -nr | head -n1 | awk '{ print substr($0, index($0,$2)) }' | sed 's/ /%20/g')
-anime=$(curl -s "https://kitsu.io/api/edge/anime?filter\[text\]=$nosquare&page\[limit\]=1&page\[offset\]=0" | grep -o "canonicalTitle\":\".*" | sed -n 's/\(,\).*/\1/p'|  cut -d':' -f 2- | sed 's/^\"//;s/,$//;s/\"$//;s/-.*$//;s/^ *//;s/ *$//' | sed 's/[[:punct:]]\+//g;s/ /.*/g')
+anime=$(curl -s "https://kitsu.io/api/edge/anime?filter\[text\]=$nosquare&page\[limit\]=1&page\[offset\]=0" | grep -o "canonicalTitle\":\".*" | sed -n 's/\(,\).*/\1/p'|  cut -d':' -f 2- | sed 's/^\"//;s/,$//;s/\"$//;s/-.*$//;s/^ *//;s/ *$//;s/TV//' | sed 's/[[:punct:]]\+//g;s/ /.*/g')
 episode=$(echo "$1"  |  sed 's/\[[^]]*\]//g;s/([^)]*)//g;s/\.[^.]*$//;s/^ *//g;s/ *$//' | awk '{print $NF}' )
 grepisode=$(echo "$episode" | sed 's/0/\.\*/g')
 nulno=$(echo "$episode" | sed 's/^0*//')
@@ -110,19 +116,29 @@ emax=$(regexsh $emax 9999) # | sed 's/(/(?:/')
 epigrep="$emin-.*$emax"
 ws=$(curl -s 'https://kitsunekko.net/dirlist.php?dir=subtitles%2Fjapanese%2F' | grep -i "$anime" | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's/^/https:\/\/kitsunekko.net/' | head -n1 )
 ws=$(curl -s "$ws")
-choose=$(echo "$ws" |  grep "<strong>" | sed 's/^.*<strong>//;s/<\/strong>.*$//' | sed -e 's/\<00*\([1-9]\)/.*\1/g' | grep -E "$grepisode|$epigrep" | awk -v 'expr=srt:ass:zip:rar' 'BEGIN { n=split(expr, e, /:/);for(i=i; i<=n; ++i) m[i]="" }{ for(i=1; i<=n; ++i) if ($0 ~ e[i]) {m[i]=m[i] $0 ORS; next } }END { for (i=1; i<=n; ++i) printf m[i] }' | head -n1)
+choose=$(echo "$ws" |  grep "<strong>" | sed 's/^.*<strong>//;s/<\/strong>.*$//' | sed -e 's/\<00*\([1-9]\)/.*\1/g' | grep -E "$grepisode|$epigrep" | grep -v "[[:digit:]]$grepisode[[:digit:]]" | awk -v 'expr=srt:ass:zip:rar' 'BEGIN { n=split(expr, e, /:/);for(i=i; i<=n; ++i) m[i]="" }{ for(i=1; i<=n; ++i) if ($0 ~ e[i]) {m[i]=m[i] $0 ORS; next } }END { for (i=1; i<=n; ++i) printf m[i] }' | head -n1)
 if echo "$choose" | grep -q ".srt$\|.ass$"; then
     link=$(echo "$ws" | grep "$choose"  | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's/^/https:\/\/kitsunekko.net\//' | head -n1)
     name=$(echo "$choose" | sed 's/\.\*/0/g')
     echo "$name"
-    ext=${choose##*.}
-    curl -sL "$link" -o "$1"."$ext"
+    if [[ "$mpv" == "1" ]] ; then
+	    ext=${choose##*.}
+	    curl -sL "$link" -o "$1"."$ext"
+    else
+	    echo "$link"
+    fi
+
 elif echo "$choose" | grep -q ".zip$\|.rar$"; then
     link=$(echo "$ws" | grep "$choose"  | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's/^/https:\/\/kitsunekko.net\//' | head -n1)
     name=$(echo "$choose" | sed 's/\.\*/0/g')
     echo "$name"
-    curl -sLO "$link"
-    echo "Archive downloaded"
+    if [[ "$mpv" == "1" ]] ; then
+	    ext=${choose##*.}
+	    curl -sL "$link" -o "/tmp/chmonime.$ext"
+	    number=$(7z l -slt "/tmp/chmonime.$ext"  | grep "^Path =" | sed 's/^Path = //' | grep "$episode" | head -n1)
+	    subext=${number##*.}
+	    7z e -so "/tmp/chmonime.$ext" "$number" -r > "$1"."$subext"
+    else
+	    echo "$link"
+    fi
 fi
-
-
