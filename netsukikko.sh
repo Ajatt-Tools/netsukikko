@@ -114,12 +114,13 @@ emax=$((nulno + 1))
 emin=$(regexsh 0 $emin) #| sed 's/(/(?:/')
 emax=$(regexsh $emax 9999) # | sed 's/(/(?:/')
 epigrep="$emin-.*$emax"
-ws=$(curl -s 'https://kitsunekko.net/dirlist.php?dir=subtitles%2Fjapanese%2F' | grep -i "$anime" | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's/^/https:\/\/kitsunekko.net/' | head -n1 )
+ws=$(curl -s 'https://kitsunekko.net/dirlist.php?dir=subtitles%2Fjapanese%2F' | grep -i "$anime<\/strong>" | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's/^/https:\/\/kitsunekko.net/' | head -n1 )
 ws=$(curl -s "$ws")
-choose=$(echo "$ws" |  grep "<strong>" | sed 's/^.*<strong>//;s/<\/strong>.*$//' | sed -e 's/\<00*\([1-9]\)/.*\1/g' | grep -E "$grepisode|$epigrep" | grep -v "[[:digit:]]$grepisode[[:digit:]]" | awk -v 'expr=srt:ass:zip:rar' 'BEGIN { n=split(expr, e, /:/);for(i=i; i<=n; ++i) m[i]="" }{ for(i=1; i<=n; ++i) if ($0 ~ e[i]) {m[i]=m[i] $0 ORS; next } }END { for (i=1; i<=n; ++i) printf m[i] }' | head -n1)
+choose=$(echo "$ws" |  grep "<strong>" | sed 's/^.*<strong>//;s/<\/strong>.*$//' | sed -e 's/\<00*\([1-9]\)/.*\1/g;s/[[:digit:]]\+[x×X][[:digit:]]\+/.*/g;s/[xX]26[45]/.*/g' | grep -E "$grepisode|$epigrep" | grep -v "[[:digit:]]$grepisode[[:digit:]]" | awk -v 'expr=srt:ass:zip:rar' 'BEGIN { n=split(expr, e, /:/);for(i=i; i<=n; ++i) m[i]="" }{ for(i=1; i<=n; ++i) if ($0 ~ e[i]) {m[i]=m[i] $0 ORS; next } }END { for (i=1; i<=n; ++i) printf m[i] }' | head -n1| sed 's/\[/\\[/g;s/\]/\\]/g')
 if echo "$choose" | grep -q ".srt$\|.ass$"; then
-    link=$(echo "$ws" | grep "$choose"  | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's/^/https:\/\/kitsunekko.net\//' | head -n1)
-    name=$(echo "$choose" | sed 's/\.\*/0/g')
+    all=$(echo "$ws" | grep "$choose")
+    link=$(echo "$all" | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's/^/https:\/\/kitsunekko.net\//' | head -n1)
+    name=$(echo "$all" | sed 's/^.*<strong>//' | grep -o "$choose")
     echo "$name"
     if [[ "$mpv" == "1" ]] ; then
 	    ext=${choose##*.}
@@ -129,8 +130,9 @@ if echo "$choose" | grep -q ".srt$\|.ass$"; then
     fi
 
 elif echo "$choose" | grep -q ".zip$\|.rar$"; then
-    link=$(echo "$ws" | grep "$choose"  | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's/^/https:\/\/kitsunekko.net\//' | head -n1)
-    name=$(echo "$choose" | sed 's/\.\*/0/g')
+    all=$(echo "$ws" | grep "$choose")
+    link=$(echo "$all" | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's/^/https:\/\/kitsunekko.net\//' | head -n1)
+    name=$(echo "$all" | sed 's/^.*<strong>//' | grep -o "$choose")
     echo "$name"
     if [[ "$mpv" == "1" ]] ; then
 	    ext=${choose##*.}
