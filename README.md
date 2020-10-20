@@ -1,6 +1,8 @@
 # netsukikko
 script and mpv addon for downloading japanese subs from kitsunekko
 
+[![](https://img.youtube.com/vi/6ezuoT7vHHc/maxres1.jpg)](https://www.youtube.com/watch?v=6ezuoT7vHHc "netsukikko")
+
 ## Usage:
 ### As cli tool:
 `./netsukikko.sh "[NAME] Of - Episode 24 [2020].mkv"`
