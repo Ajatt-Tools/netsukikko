@@ -1,6 +1,8 @@
 # netsukikko
 script and mpv addon for downloading japanese subs from kitsunekko
 
+[![Matrix](https://img.shields.io/badge/Japanese_study_room-join-green.svg)](https://app.element.io/#/room/#djt:g33k.se)
+
 video (clickable):  
 [![](https://img.youtube.com/vi/6ezuoT7vHHc/hq1.jpg)](https://www.youtube.com/watch?v=6ezuoT7vHHc "netsukikko")
 
