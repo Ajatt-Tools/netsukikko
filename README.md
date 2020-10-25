@@ -15,4 +15,4 @@ or
 `./netsukikko.sh "Anime Episode"`
 
 ### As mpv addon:
-Copy `netsukikko.lua` into your mpv addon directory and `netsukikko.sh` in every place. Edit path to sh file in `netsukikko.lua`. Press `Ctrl+A` when you watch anime episode to download subs automatically.
+Copy `netsukikko.lua` into your mpv addon directory. Press `Ctrl+A` when you watch anime episode to download subs automatically.
