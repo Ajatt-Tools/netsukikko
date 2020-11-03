@@ -15,7 +15,7 @@ or
 `./netsukikko.sh "Anime Episode"`
 
 #### Windows:
-You need to install curl, 7-zip and busybox. Easiest way is to install it with scoop (https://scoop.sh): 
+You need to install curl, 7-zip and msys2. Easiest way is to install it with scoop (https://scoop.sh): 
 ##### Installing scoop:
 ```
 # Open Powershell from Start Menu and print next two lines:
@@ -24,10 +24,12 @@ iwr -useb get.scoop.sh | iex
 ```
 ##### Installing apps:
 ```
-scoop install busybox 
+scoop install msys2 
 scoop install curl
 scoop install 7zip
 ```
+##### Download `netsukikko.sh`
+And place in any folder. **If you want to use mpv addon, edit path to `netsukikko.sh` in `netsukikko-win.lua`**
 
 ### As mpv addon:
-Copy `netsukikko.lua` into your mpv addon directory. Press `Ctrl+A` when you watch anime episode to download subs automatically.
+Copy `netsukikko.lua` or `netsukikko-win.lua` into your mpv addon directory. Press `Ctrl+A` when you watch anime episode to download subs automatically.
