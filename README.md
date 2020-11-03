@@ -15,7 +15,7 @@ or
 `./netsukikko.sh "Anime Episode"`
 
 #### Windows:
-You need to install curl and busybox. Easiest way is to install it with scoop (https://scoop.sh): 
+You need to install curl, 7-zip and busybox. Easiest way is to install it with scoop (https://scoop.sh): 
 ##### Installing scoop:
 ```
 # Open Powershell from Start Menu and print next two lines:
@@ -26,6 +26,7 @@ iwr -useb get.scoop.sh | iex
 ```
 scoop install busybox 
 scoop install curl
+scoop install 7zip
 ```
 
 ### As mpv addon:
