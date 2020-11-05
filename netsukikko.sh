@@ -107,7 +107,7 @@ fi
 nosquare=$(echo "$1" | sed 's/_/ /g;s/\(.*\)- .*/\1/;s/[0-9]//g;s/\[[^]]*\]//g;s/[0-9]//g;s/([^)]*)//g;s/\.[^.]*$//;s/^ *//g;s/ *$//' | sort -nf | uniq -ci | sort -nr | head -n1 | awk '{ print substr($0, index($0,$2)) }' | sed 's/ /%20/g')
 anime=$(curl -s "https://kitsu.io/api/edge/anime?filter\[text\]=$nosquare&page\[limit\]=1&page\[offset\]=0" | grep -o "canonicalTitle\":\".*" | sed -n 's/\(,\).*/\1/p'|  cut -d':' -f 2- | sed 's/^\"//;s/,$//;s/\"$//;s/-.*$//;s/^ *//;s/ *$//;s/TV//' | sed 's/[[:punct:]]\+//g;s/ /.*/g')
 episode=$(echo "$1"  |  sed 's/\[[^]]*\]//g;s/([^)]*)//g;s/\.[^.]*$//;s/^ *//g;s/ *$//' | awk '{print $NF}' )
-grepisode=$(echo "$episode" | sed 's/0/\.\*/g')
+grepisode=$(echo "$episode" | sed 's/^0*/\.\*/g')
 nulno=$(echo "$episode" | sed 's/^0*//')
 emin=$((nulno - 1))
 emax=$((nulno + 1))
