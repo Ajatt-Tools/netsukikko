@@ -64,13 +64,13 @@ regexsh() {
     leftBounds $numStart $numEnd
 
     #remove last from left bounds
-    unset result[${#result[@]}-1]
+    unset result[${#result[@]}-1] 2>/dev/null
 
     #get rightBounds
     rightBoundsResult=()
     rightBounds ${result[@]: -1} $numEnd
     #remove last from right bounds
-    unset rightBoundsResult[${#rightBoundsResult[@]}-1]
+    unset rightBoundsResult[${#rightBoundsResult[@]}-1] 2>/dev/null
 
     #echo ${rightBoundsResult[@]}
 
