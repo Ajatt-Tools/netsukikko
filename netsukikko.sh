@@ -108,7 +108,7 @@ else
 fi
 
 nosquare=$(echo "$1" | sed 's/_/ /g;s/\(.*\)- .*/\1/;s/[0-9]//g;s/\[[^]]*\]//g;s/[0-9]//g;s/([^)]*)//g;s/\.[^.]*$//;s/^ *//g;s/ *$//' | sort -nf | uniq -ci | sort -nr | head -n1 | awk '{ print substr($0, index($0,$2)) }' | sed 's/ /%20/g')
-anime=$(curl -s "https://kitsu.io/api/edge/anime?filter\[text\]=$nosquare&page\[limit\]=1&page\[offset\]=0" | grep -o "canonicalTitle\":\".*" | sed -n 's/\(,\).*/\1/p'|  cut -d':' -f 2- | sed 's/^\"//;s/,$//;s/\"$//;s/-.*$//;s/^ *//;s/ *$//;s/TV//' | sed 's/[[:punct:]]\+//g;s/ /.*/g')
+anime=$(curl -L -s "https://kitsu.io/api/edge/anime?filter\[text\]=$nosquare&page\[limit\]=1&page\[offset\]=0" | grep -o "canonicalTitle\":\".*" | sed -n 's/\(,\).*/\1/p'|  cut -d':' -f 2- | sed 's/^\"//;s/,$//;s/\"$//;s/-.*$//;s/^ *//;s/ *$//;s/TV//' | sed 's/[[:punct:]]\+//g;s/ /.*/g')
 episode=$(echo "$1"  |  sed 's/\[[^]]*\]//g;s/([^)]*)//g;s/\.[^.]*$//;s/^ *//g;s/ *$//' | grep -o "[[:digit:]]*" | tail -n1 | awk '{print $NF}' )
 grepisode=$(echo "$episode" | sed 's/^0*/\.\*/g')
 nulno=$(echo "$episode" | sed 's/^0*//')
@@ -118,7 +118,7 @@ emin=$(regexsh 0 $emin) #| sed 's/(/(?:/')
 emax=$(regexsh $emax 9999) # | sed 's/(/(?:/')
 epigrep="$emin-.*$emax"
 ws=$(curl -L -s https://kitsunekko.net/subtitles/$lang/ | grep -i "$anime"  | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed "s/^/https:\/\/kitsunekko.net\/subtitles\/$lang\//" | head -n1)
-ws=$(curl -s "$ws")
+ws=$(curl -L -s "$ws")
 choose=$(echo "$ws" |  grep "^<li>"| sed 's/^.*> //;s/<.*$//;s/_/ /g'| sed -e 's/\([0]\)/.*/g;s/[[:digit:]]\+[x×X][[:digit:]]\+/.*/g;s/[xX]26[45]/.*/g' | grep -E "$grepisode|$epigrep" | grep -v "[[:digit:]]\\$grepisode[[:digit:]]" | awk -v 'expr=srt:ass:zip:rar' 'BEGIN { n=split(expr, e, /:/);for(i=i; i<=n; ++i) m[i]="" }{ for(i=1; i<=n; ++i) if ($0 ~ e[i]) {m[i]=m[i] $0 ORS; next } }END { for (i=1; i<=n; ++i) printf m[i] }' | head -n1| sed 's/\[/\\[/g;s/\]/\\]/g' | sed 's/ /./g')
 if echo "$choose" | grep -q ".srt$\|.ass$"; then
     all=$(echo "$ws" | grep "$choose")
