@@ -132,7 +132,7 @@ if echo "$choose" | grep -q ".srt$\|.ass$"; then
 	    echo "$link"
     fi
 
-elif echo "$choose" | grep -q ".zip$\|.rar$"; then
+elif echo "$choose" | grep -q ".zip$\|.rar$\|.7z$"; then
     all=$(echo "$ws" | grep "$choose")
     link=$(echo "$all" | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed "s/^/https:\/\/kitsunekko.net\/subtitles\/$lang\//" | head -n1)
     name=$(echo "$all" | sed 's/^.*> //' | grep -o "$choose")
