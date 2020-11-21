@@ -124,7 +124,7 @@ if echo "$choose" | grep -q ".srt$\|.ass$"; then
     all=$(echo "$ws" | grep "$choose")
     link=$(echo "$all" | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed "s/^/https:\/\/kitsunekko.net\/subtitles\/$lang\//" | head -n1)
     name=$(echo "$all" | sed 's/^.*> //' | grep -o "$choose")
-    echo "$name"
+    echo "$name" | head -n1
     if [[ "$mpv" == "1" ]] ; then
 	    ext=${choose##*.}
 	    curl -sL "$link" -o "$1"."$ext"
@@ -136,7 +136,7 @@ elif echo "$choose" | grep -q ".zip$\|.rar$"; then
     all=$(echo "$ws" | grep "$choose")
     link=$(echo "$all" | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed "s/^/https:\/\/kitsunekko.net\/subtitles\/$lang\//" | head -n1)
     name=$(echo "$all" | sed 's/^.*> //' | grep -o "$choose")
-    echo "$name"
+    echo "$name" | head -n1
     if [[ "$mpv" == "1" ]] ; then
 	    ext=${choose##*.}
 	    curl -sL "$link" -o "/tmp/chmonime.$ext"
