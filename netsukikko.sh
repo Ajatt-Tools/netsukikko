@@ -1,6 +1,6 @@
 #!/bin/bash
 
-lang="japanese"
+lang="${lang:-japanese}"
 
 regexsh() {
     # this nice regex shell converter created by Luis C - https://github.com/luiscassih/RegeXNumRangeGenerator
