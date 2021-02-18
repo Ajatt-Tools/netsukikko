@@ -3,7 +3,7 @@ script and mpv addon for downloading japanese subs from kitsunekko
 
 
 video (clickable):  
-[![](https://img.youtube.com/vi/6ezuoT7vHHc/hq1.jpg)](https://www.youtube.com/watch?v=6ezuoT7vHHc "netsukikko")
+[![](https://img.youtube.com/vi/6ezuoT7vHHc/hq1.jpg)](https://files.catbox.moe/4tv9sn.mp4 "netsukikko")
 
 ## Usage:
 ### As cli tool:
